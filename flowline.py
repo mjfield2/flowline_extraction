@@ -2,6 +2,20 @@ import numpy as np
 from scipy.interpolate import LinearNDInterpolator
 
 def linear_interp(xx, yy, vx, vy, x0, y0, maxdist):
+    """
+    2D linear interpolation of velocity field
+
+    Args:
+        xx : 2D x-coordinates, result of np.meshgrid
+        yy : 2D y-coordinates, result of np.meshgrid
+        vx : 2D x-component of velocity field
+        vy : 2D y-component of velocity field
+        x0 : x-coordinate to interpolate
+        y0 : y-coordinate to interpolate
+        maxdist : maximum distance to look for interpolating
+    Outputs:
+        interpolated x velocity and y velocity
+    """
     dist = np.sqrt((xx-x0)**2+(yy-y0)**2)
     dist_mask = dist < maxdist
     points = np.array([xx[dist_mask], yy[dist_mask]]).T
@@ -14,6 +28,29 @@ def linear_interp(xx, yy, vx, vy, x0, y0, maxdist):
     return vx_pred, vy_pred
 
 def flowline(xx, yy, vx, vy, x0, y0, stride, total_dist, maxdist=5e3, direction='forward', mode='distance', max_iter=1000):
+    """
+    Extract profile points along flowline.
+
+    Args:
+        xx : 2D x-coordinates, result of np.meshgrid
+        yy : 2D y-coordinates, result of np.meshgrid
+        vx : 2D x-component of velocity field
+        vy : 2D y-component of velocity field
+        x0 : starting x-coordinate
+        y0 : starting y-coordinate
+        stride : how far to move in time or distance, corresponding to mode
+        total_dist : total distance to move
+        maxdist : maximum distance to look for interpolating velocity
+        direction : move forward or backward from starting point
+        mode : distance or time for movement. Time results in
+            points spaced scaled by velocity and distance results in
+            points spaced equally in space
+        max_iter : maximum number of points. This can be helpful when
+            using time since a while loop is used
+    Outputs:
+        Array of points with x-coordinate in first column and y-coordinate in second
+        and cumulative distances along profile
+    """
     
     vx0, vy0 = linear_interp(xx, yy, vx, vy, x0, y0, maxdist)
 
