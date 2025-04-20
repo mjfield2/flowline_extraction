@@ -12,4 +12,6 @@ Extract points along a flow line in a velocity field for analysis and visualizat
 
 <img src="./figures/multiple_flowlines.png" width="600"/>
 
+<img src="./figures/flowline_sampling" width="600"/>
+
 <img src="./figures/cross_section.png" width="800"/>
